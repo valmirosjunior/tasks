@@ -73,6 +73,12 @@
         </nav>
 
         <main class="py-4">
+            @if (session('success'))
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                    {{ session('success') }}
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>
