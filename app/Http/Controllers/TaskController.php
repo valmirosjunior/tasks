@@ -16,8 +16,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Auth::user()->tasks()->orderBy('name');
-        return view('tasks.index',compact($tasks));
+        $tasks = Auth::user()->tasks()->orderBy('name')->get();
+        return view('tasks.index')->with(compact('tasks'));
     }
 
     /**
@@ -28,7 +28,7 @@ class TaskController extends Controller
     public function create()
     {
         $task = new Task();
-        return view('tasks.create',compact($task));
+        return view('tasks.create')->with(compact('task'));
     }
 
     /**
@@ -40,7 +40,11 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate(Task::$rolesValidation);
-        return $this->index();
+        $data = $request->input();
+        $data['user_id'] = Auth::id();
+        $task = new Task($data);
+        $task->save();
+        return redirect()->route('tasks.index')->with($this->buildSuccessMessage());
     }
 
     /**
@@ -51,7 +55,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return view('tasks.show', compact($task));
+        return view('tasks.show')->with(compact('task'));
     }
 
     /**
@@ -62,7 +66,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('tasks.edit', compact($task));
+        return view('tasks.edit')->with(compact('task'));
     }
 
     /**
@@ -77,7 +81,7 @@ class TaskController extends Controller
         $request->validate(Task::$rolesValidation);
         $task->fill($request->input());
         $task->save();
-        return back()->with(["success" => __('message.success_operation')]);
+        return back()->with($this->buildSuccessMessage());
     }
 
     /**
@@ -90,6 +94,16 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete();
-        return back()->with(["success" => __('message.success_operation')]);
+        return redirect()->route('tasks.index')->with($this->buildSuccessMessage());
     }
+
+    /***
+     * This method build an array containing the success message
+     * @return array
+     */
+    private function buildSuccessMessage()
+    {
+        return ["success" => __('messages.success_operation')];
+    }
+
 }
