@@ -10,7 +10,9 @@
                     <div class="card-body">
                         <form method="POST" action="{{ $action}}">
                             @csrf
-
+                            @if( isset($method))
+                                <input name="_method" type="hidden" value="{{$method}}">
+                            @endif
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">Name </label>
 
