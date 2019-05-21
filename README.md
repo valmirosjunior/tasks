@@ -7,4 +7,4 @@ To run:
 3. put the information of your environment
 4. php artisan migrate
 
-Enjoy it!!!
+You can access it on : https://valmir-tasks.herokuapp.com
