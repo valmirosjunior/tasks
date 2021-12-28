@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  db:
+    container_name: tasks-db
+    image: mysql:8.0
+    restart: unless-stopped
+    tty: true
+    environment:
+      MYSQL_DATABASE: tasks
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - tasks
+
+  web:
+    container_name: tasks-web
+    image: bitnami/laravel:8.6.10 
+    working_dir: /tasks
+    volumes:
+      - .:/tasks      
+    command: /bin/sh
+    tty: true
+    ports:
+      - "8000:8000"
+    networks:
+      - tasks
+
+volumes:
+  bundle_data:
+  db_data:
+
+networks:
+  tasks:
+    driver: bridge
