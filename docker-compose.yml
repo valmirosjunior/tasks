@@ -31,7 +31,6 @@ services:
       - tasks
 
 volumes:
-  bundle_data:
   db_data:
 
 networks:
